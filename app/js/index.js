@@ -80,20 +80,30 @@ var onNextClick = function() {
 	}
 };
 
-var copyRAW = function () {
+var createFavDir = function (thePath) {
+	var dir = './favourites';
+	var dirToCreate = path.join(path.dirname(thePath), dir);
+
+	if (!fs.existsSync(dirToCreate)){
+    	fs.mkdirSync(dirToCreate);
+	}
+}
+
+var copyJPEG = function () {
 	var index = $currentImage.data('currentIndex');
-	//alert(imageFiles[index])
-	//alert(path.dirname(imageFiles[index]))
 	var filePath = imageFiles[index];
-	var fileExt = path.extname(filePath);
-	var rawFilePath = filePath.replace(fileExt, '.raw');
-
+	createFavDir(filePath);
 	var fileName = path.basename(filePath)
-	var rawFileName = path.basename(filePath).replace(fileExt, '.raw');
-
 	var targetPath = path.join(path.dirname(filePath), './favourites/', fileName);
-	var targetPathRaw = path.join(path.dirname(rawFilePath), './favourites/', rawFileName);
 	fs.createReadStream(filePath).pipe(fs.createWriteStream(targetPath));
+	copyRAW(filePath);
+}
+
+var copyRAW = function (source) {
+	var fileExt = path.extname(source);
+	var rawFilePath = source.replace(fileExt, '.RAF');
+	var rawFileName = path.basename(source).replace(fileExt, '.RAF');
+	var targetPathRaw = path.join(path.dirname(rawFilePath), './favourites/', rawFileName);
 	fs.createReadStream(rawFilePath).pipe(fs.createWriteStream(targetPathRaw));
 }
 
@@ -244,7 +254,7 @@ var initialize = function() {
 	$(window).keydown(function(ev) {
 		ev.keyCode === constants.LeftKey && onPreviousClick();
 		ev.keyCode === constants.RightKey && onNextClick();
-		ev.keyCode === 13 && copyRAW();
+		ev.keyCode === 13 && copyJPEG();
 	});
 };
 initialize();
