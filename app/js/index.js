@@ -80,6 +80,25 @@ var onNextClick = function() {
 	}
 };
 
+var copyRAW = function () {
+	var index = $currentImage.data('currentIndex');
+	//alert(imageFiles[index])
+	//alert(path.dirname(imageFiles[index]))
+	var filePath = imageFiles[index];
+	var fileExt = path.extname(filePath);
+	var rawFilePath = filePath.replace(fileExt, '.raw');
+
+	var fileName = path.basename(filePath)
+	var rawFileName = path.basename(filePath).replace(fileExt, '.raw');
+
+	var targetPath = path.join(path.dirname(filePath), './favourites/', fileName);
+	var targetPathRaw = path.join(path.dirname(rawFilePath), './favourites/', rawFileName);
+	fs.createReadStream(filePath).pipe(fs.createWriteStream(targetPath));
+	fs.createReadStream(rawFilePath).pipe(fs.createWriteStream(targetPathRaw));
+}
+
+
+
 $next.click(onNextClick);
 
 // Show image in Full screen on double click
@@ -112,7 +131,7 @@ var _loadDir = function(dir, fileName) {
 	}
 
 	if(selectedImageIndex < imageFiles.length) {
-		showImage(selectedImageIndex);	
+		showImage(selectedImageIndex);
 	}
 	else {
 		alert('No image files found in this directory.');
@@ -162,10 +181,10 @@ var getCurrentFile = function() {
 var setRotateDegrees = function(deg) {
 	$currentImage.css({
 		 '-webkit-transform' : 'rotate('+deg+'deg)',
-	     '-moz-transform' : 'rotate('+deg+'deg)',  
-	      '-ms-transform' : 'rotate('+deg+'deg)',  
-	       '-o-transform' : 'rotate('+deg+'deg)',  
-	          'transform' : 'rotate('+deg+'deg)',  
+	     '-moz-transform' : 'rotate('+deg+'deg)',
+	      '-ms-transform' : 'rotate('+deg+'deg)',
+	       '-o-transform' : 'rotate('+deg+'deg)',
+	          'transform' : 'rotate('+deg+'deg)',
 	               'zoom' : 1
 	});
 
@@ -190,7 +209,7 @@ $rotateRight.click(function() {
 
 // Initialize the app
 var initialize = function() {
-	var appMenu = require('./js/app-menu'); 
+	var appMenu = require('./js/app-menu');
 	appMenu.initialize({
 		onOpen: onOpen,
 		onFileDelete: onFileDelete,
@@ -210,7 +229,7 @@ var initialize = function() {
 			filters: [
 				{
 					name: 'Images',
-					extensions: constants.SupportedImageExtensions	
+					extensions: constants.SupportedImageExtensions
 				}
 			]
 		},
@@ -225,6 +244,7 @@ var initialize = function() {
 	$(window).keydown(function(ev) {
 		ev.keyCode === constants.LeftKey && onPreviousClick();
 		ev.keyCode === constants.RightKey && onNextClick();
+		ev.keyCode === 13 && copyRAW();
 	});
 };
 initialize();
