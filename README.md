@@ -1,6 +1,8 @@
 # Image Viewer
 
-A cross-platform Image Viewer based on Electron. It runs on OS X, Windows and Linux. It provides an easy interface to browse a directory of images using the left and right keyboard buttons.
+A FORK of cross-platform Image Viewer based on Electron. It runs on OS X, Windows and Linux. It provides an easy interface to browse a directory of images using the left and right keyboard buttons.
+
+Reason for fork is an easy way to select your favourite RAW images as lightroom is too slow. Press ENTER on your fav photo and it will move your favourite JPEG AND RAF file to a favourites folder.
 
 # Preview
 
