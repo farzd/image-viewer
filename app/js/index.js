@@ -107,6 +107,16 @@ var copyRAW = function (source) {
 	fs.createReadStream(rawFilePath).pipe(fs.createWriteStream(targetPathRaw));
 }
 
+var deleteJPEG = function() {
+	var index = $currentImage.data('currentIndex');
+	var filePath = imageFiles[index];
+	var fileExt = path.extname(filePath);
+	var rawFilePath = filePath.replace(fileExt, '.RAF');
+
+	fs.unlinkSync(filePath);
+	fs.unlinkSync(rawFilePath);
+}
+
 
 
 $next.click(onNextClick);
@@ -255,6 +265,7 @@ var initialize = function() {
 		ev.keyCode === constants.LeftKey && onPreviousClick();
 		ev.keyCode === constants.RightKey && onNextClick();
 		ev.keyCode === 13 && copyJPEG();
+		ev.keyCode === 46 && deleteJPEG();
 	});
 };
 initialize();
